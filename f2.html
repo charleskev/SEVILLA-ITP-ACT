@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEVILLA EXERCISES</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 40px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 20px;
+    }
+    .droptarget {
+      width: 200px;
+      height: 150px;
+      border: 2px dashed #666;
+      border-radius: 10px;
+      padding: 10px;
+      background: #fafafa;
+    }
+    .word {
+      display: inline-block;
+      padding: 6px 12px;
+      background: #f0f0f0;
+      border: 1px solid #333;
+      border-radius: 5px;
+      cursor: grab;
+      margin-top: 10px;
+    }
+    #hiddenImage {
+      display: none;
+      margin-top: 20px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background: #4a90e2;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #357ABD;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Drag the text into the other box</h2>
+
+  <!-- Two boxes -->
+  <div class="container">
+    <div class="droptarget" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <p>Box 1</p>
+      <span class="word" id="dragWord" draggable="true" ondragstart="dragStart(event)">Drag me</span>
+    </div>
+
+    <div class="droptarget" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <p>Box 2</p>
+    </div>
+  </div>
+
+  <!-- Hidden image -->
+  <img id="hiddenImage" src="c:\Users\Charles Kevin\OneDrive\Pictures\Charles Kevin Moreno Sevilla- Resume Portfolio_files\download (1).jpg" alt="Revealed Image">
+
+  <!-- Reset button -->
+  <br>
+  <button onclick="resetPage()">Reset</button>
+
+  <script>
+    function dragStart(event) {
+      event.dataTransfer.setData("text/plain", event.target.id);
+    }
+
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      const data = event.dataTransfer.getData("text/plain");
+      const draggedElement = document.getElementById(data);
+      if (draggedElement) {
+        event.target.appendChild(draggedElement);
+        // Show picture when dropped
+        document.getElementById("hiddenImage").style.display = "block";
+      }
+    }
+
+    function resetPage() {
+      location.reload(); // simple way: reloads the whole page
+    }
+  </script>
+
+</body>
+</html>

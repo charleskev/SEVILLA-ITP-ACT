@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Card Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      padding: 40px;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    }
+    .form-section {
+      width: 40%;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .form-section h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    input {
+      width: 95%;
+      padding: 10px;
+      margin: 5px 0 15px 0;
+      border: 1px solid #bbb;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #4a90e2;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #357ABD;
+    }
+    .profile-card {
+      border-radius: 15px;
+      padding: 20px;
+      width: 280px;
+      text-align: center;
+      background: white;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      transition: transform 0.3s;
+    }
+    .profile-card:hover {
+      transform: translateY(-5px);
+    }
+    .profile-card h3 {
+      margin-bottom: 10px;
+      color: #222;
+    }
+    .profile-card p {
+      margin: 5px 0;
+      color: #555;
+    }
+    .like-btn {
+      margin-top: 15px;
+      padding: 8px 15px;
+      border: none;
+      border-radius: 20px;
+      background-color: #ff4d6d;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .like-btn:hover {
+      background-color: #e63950;
+    }
+    .like-btn span {
+      margin-right: 5px;
+    }
+    #likeCount {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-section">
+    <h2>Enter Your Information</h2>
+    <label>Name:</label><br>
+    <input type="text" id="name" placeholder="Enter name"><br>
+
+    <label>Course:</label><br>
+    <input type="text" id="course" placeholder="Enter course"><br>
+
+    <label>Year:</label><br>
+    <input type="text" id="year" placeholder="Enter year"><br>
+
+    <button onclick="generateCard()">Generate Profile Card</button>
+
+    <h3>Real-Time Preview</h3>
+    <p id="previewName">Name: </p>
+    <p id="previewCourse">Course: </p>
+    <p id="previewYear">Year: </p>
+  </div>
+
+  <div>
+    <h2>Your Profile Card</h2>
+    <div class="profile-card" id="profileCard">
+      <h3 id="cardName">Your Name</h3>
+      <p id="cardCourse">Your Course</p>
+      <p id="cardYear">Your Year</p>
+      <button class="like-btn" onclick="likeCard()"><span>❤️</span> Like</button>
+      <p id="likeCount">0 likes</p>
+    </div>
+  </div>
+
+  <script>
+    let likes = 0; // counter for likes
+
+    function generateCard() {
+      // Get input values
+      let name = document.getElementById("name").value;
+      let course = document.getElementById("course").value;
+      let year = document.getElementById("year").value;
+
+      // Update preview
+      document.getElementById("previewName").textContent = "Name: " + name;
+      document.getElementById("previewCourse").textContent = "Course: " + course;
+      document.getElementById("previewYear").textContent = "Year: " + year;
+
+      // Update profile card
+      document.getElementById("cardName").textContent = name || "Your Name";
+      document.getElementById("cardCourse").textContent = course || "Your Course";
+      document.getElementById("cardYear").textContent = year || "Your Year";
+    }
+
+    function likeCard() {
+      likes++;
+      document.getElementById("likeCount").textContent = likes + (likes === 1 ? " like" : " likes");
+    }
+  </script>
+
+</body>
+</html>
