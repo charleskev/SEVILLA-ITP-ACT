@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SEVILLA TOGGLE SWITCH</title>
+<style>
+  body{font-family:Arial, sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;transition:.5s;background:#f4f4f4;color:#333}
+  .dark{background:#1a1a1a;color:#eee}
+  .toggle{display:flex;align-items:center;padding:10px 15px;border-radius:50px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+  .dark .toggle{background:#2d2d2d;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+  .switch{position:relative;width:60px;height:30px;margin:0 10px}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{position:absolute;inset:0;background:#ccc;border-radius:30px;cursor:pointer;transition:.4s}
+  .slider:before{content:"";position:absolute;height:24px;width:24px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.4s}
+  input:checked+.slider{background:#2196F3}
+  input:checked+.slider:before{transform:translateX(30px)}
+</style>
+</head>
+<body>
+  <div class="toggle">
+    <span id="label">Light</span>
+    <label class="switch">
+      <input type="checkbox" id="chk">
+      <span class="slider"></span>
+    </label>
+    <span>Dark</span>
+  </div>
+
+<script>
+const body=document.body,chk=document.getElementById("chk"),label=document.getElementById("label");
+if(localStorage.theme==="dark"){body.classList.add("dark");chk.checked=1;label.textContent="Dark";}
+chk.onchange=()=>{body.classList.toggle("dark",chk.checked);
+label.textContent=chk.checked?"Dark":"Light";
+localStorage.theme=chk.checked?"dark":"light";}
+</script>
+</body>
+</html>
