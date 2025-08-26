@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Task Manager</title>
+  <style>
+    /* ==== GLOBAL STYLES ==== */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      text-align: center;
+      color: white;
+      margin-bottom: 25px;
+      font-size: 2.4rem;
+      letter-spacing: 1px;
+      text-shadow: 1px 2px 6px rgba(0,0,0,0.3);
+    }
+
+    /* ==== INPUT AREA ==== */
+    .task-input {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input, select, button {
+      padding: 12px 14px;
+      font-size: 14px;
+      border: none;
+      border-radius: 12px;
+      outline: none;
+    }
+    input, select {
+      width: 220px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+    button {
+      background: linear-gradient(135deg, #6a89cc, #82ccdd);
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+    }
+
+    /* ==== SEARCH BAR ==== */
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .search-bar input {
+      flex: 1;
+      max-width: 300px;
+    }
+
+    /* ==== COLUMNS ==== */
+    .columns {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 1100px;
+    }
+    .column {
+      backdrop-filter: blur(15px);
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 18px;
+      padding: 20px;
+      width: 32%;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .column:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+    }
+    .column h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #2c3e50;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    /* ==== TASK CARDS ==== */
+    .task {
+      padding: 12px 14px;
+      margin: 10px 0;
+      border-radius: 12px;
+      background: #fff;
+      cursor: grab;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .task:active {
+      cursor: grabbing;
+    }
+    .task:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.18);
+    }
+    .high { border-left: 6px solid #e17055; background: #fff6f2; }
+    .medium { border-left: 6px solid #f6b93b; background: #fffaf0; }
+    .low { border-left: 6px solid #78e08f; background: #f4fff6; }
+
+    /* ==== BUTTONS ==== */
+    .remove-btn {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-left: 10px;
+      transition: 0.2s;
+    }
+    .remove-btn:hover {
+      background: #d63031;
+    }
+
+    .clear-btn {
+      display: block;
+      margin: 30px auto 0;
+      background: linear-gradient(135deg, #38ada9, #78e08f);
+      padding: 12px 26px;
+      font-size: 15px;
+      border-radius: 14px;
+      font-weight: bold;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.18);
+      color: white;
+      transition: 0.3s;
+    }
+    .clear-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+    }
+
+    /* ==== DRAG HIGHLIGHT ==== */
+    .highlight {
+      background: rgba(130, 204, 221, 0.25) !important;
+      border: 2px dashed #82ccdd;
+    }
+  </style>
+</head>
+<body>
+  <h1>Interactive Task Manager</h1>
+
+  <!-- Task Input -->
+  <div class="task-input">
+    <input type="text" id="taskInput" placeholder="New task...">
+    <select id="priority">
+      <option value="low">Low Priority</option>
+      <option value="medium">Medium Priority</option>
+      <option value="high">High Priority</option>
+    </select>
+    <button onclick="addTask()">+ Add Task</button>
+  </div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search tasks..." onkeyup="searchTasks()">
+    <button onclick="clearSearch()">Clear</button>
+  </div>
+
+  <!-- Task Columns -->
+  <div class="columns">
+    <div class="column" id="todo" ondragover="allowDrop(event)" ondrop="drop(event)">
+      <h3>📝 To Do</h3>
+    </div>
+    <div class="column" id="inprogress" ondragover="allowDrop(event)" ondrop="drop(event)">
+      <h3>🚧 In Progress</h3>
+    </div>
+    <div class="column" id="done" ondragover="allowDrop(event)" ondrop="drop(event)">
+      <h3>✅ Done</h3>
+    </div>
+  </div>
+
+  <!-- Clear All Tasks Button -->
+  <button class="clear-btn" onclick="clearAllTasks()">Clear All Tasks</button>
+
+  <script>
+    let draggedTask = null;
+
+    function addTask() {
+      let taskText = document.getElementById("taskInput").value.trim();
+      let priority = document.getElementById("priority").value;
+
+      if (taskText === "") return;
+
+      let task = document.createElement("div");
+      task.className = "task " + priority;
+      task.draggable = true;
+
+      let span = document.createElement("span");
+      span.textContent = taskText;
+      span.style.flexGrow = "1";
+
+      let removeBtn = document.createElement("button");
+      removeBtn.textContent = "✖";
+      removeBtn.className = "remove-btn";
+      removeBtn.onclick = (e) => {
+        e.stopPropagation();
+        task.remove();
+      };
+
+      task.appendChild(span);
+      task.appendChild(removeBtn);
+
+      // Drag Events
+      task.addEventListener("dragstart", (e) => {
+        draggedTask = task;
+        setTimeout(() => task.style.display = "none", 0);
+      });
+
+      task.addEventListener("dragend", () => {
+        draggedTask.style.display = "flex";
+        draggedTask = null;
+      });
+
+      document.getElementById("todo").appendChild(task);
+      document.getElementById("taskInput").value = "";
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add("highlight");
+    }
+
+    function drop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove("highlight");
+      if (draggedTask) e.currentTarget.appendChild(draggedTask);
+    }
+
+    function searchTasks() {
+      let filter = document.getElementById("searchInput").value.toLowerCase();
+      let tasks = document.querySelectorAll(".task span");
+
+      tasks.forEach(span => {
+        let task = span.parentElement;
+        task.style.display = span.textContent.toLowerCase().includes(filter) ? "" : "none";
+      });
+    }
+
+    function clearSearch() {
+      document.getElementById("searchInput").value = "";
+      searchTasks();
+    }
+
+    function clearAllTasks() {
+      document.querySelectorAll(".column").forEach(col => {
+        col.innerHTML = "<h3>" + col.querySelector("h3").textContent + "</h3>";
+      });
+    }
+  </script>
+</body>
+</html>
